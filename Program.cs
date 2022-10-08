@@ -24,7 +24,8 @@ namespace consoleApp
         {
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
-                .UseSqlite("Data Source = shop.db");
+                //.UseSqlite("Data Source = shop.db");
+                .UseSqlServer(@"Data Source= .\SQLEXPRESS;Initial Catalog=ShopDb;Integrated Security=SSPI; ");
         }
 
     }
@@ -55,11 +56,12 @@ namespace consoleApp
         {
 
             // AddProduct();
+            AddProducts();
             // GetAllProducts();
             // GetAllProductById(1);
             // GetAllProductByName("samsung");
             // UpdateProduct();
-            DeleteProduct(13);
+            // DeleteProduct(13);
         }
 
         static void DeleteProduct(int id){
