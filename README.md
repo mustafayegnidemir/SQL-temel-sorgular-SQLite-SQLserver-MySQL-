@@ -8,7 +8,7 @@ ilgili sql database ine ait packeage lar
   'dotnet tool install  --global dotnet-ef'
   'dotnet add package Microsoft.EntityFrameworkCore.Design'
 
-Conole da SQL sorgularını dönüştürülmüş halini görmek için
+Console da SQL sorgularını dönüştürülmüş halini görmek için
   'dotnet add package Microsoft.Extensions.Logging.Console --version 6.0.0'
   
 önce istenilen tablolara dair class lar oluşturulur.
