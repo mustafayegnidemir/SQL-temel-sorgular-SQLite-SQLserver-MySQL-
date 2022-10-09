@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "RgutUKRcP0zfrLNfVXZNbL/HxXDwffX+mQC2qEKKJ97l1/sE//9iVL4dHkHo4nXjc3OHGQSlaLo728jQryqfGQ==",
+  "dgSpecHash": "BkXOSJC+RwV+SHpKW0yu1j8Hcr7iDKU01WMk+P0RwceC8nyoTFDe+Eur2Gr54kNSpQU6zsDuBRNd7ID2tVXXCQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
   "expectedPackageFiles": [
@@ -41,6 +41,8 @@
     "C:\\Users\\myegn\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\myegn\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\myegn\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\myegn\\.nuget\\packages\\mysqlconnector\\2.1.2\\mysqlconnector.2.1.2.nupkg.sha512",
+    "C:\\Users\\myegn\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\6.0.2\\pomelo.entityframeworkcore.mysql.6.0.2.nupkg.sha512",
     "C:\\Users\\myegn\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.6\\sqlitepclraw.bundle_e_sqlite3.2.0.6.nupkg.sha512",
     "C:\\Users\\myegn\\.nuget\\packages\\sqlitepclraw.core\\2.0.6\\sqlitepclraw.core.2.0.6.nupkg.sha512",
     "C:\\Users\\myegn\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.6\\sqlitepclraw.lib.e_sqlite3.2.0.6.nupkg.sha512",

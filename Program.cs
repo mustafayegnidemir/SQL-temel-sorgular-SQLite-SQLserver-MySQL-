@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,10 +23,13 @@ namespace consoleApp
         // Provider
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var connectionString = @"server=localhost;port=3306;database=ShopDb;user=root;password=mysql123;";
+            var serverVersion = ServerVersion.AutoDetect(connectionString);
             optionsBuilder
                 .UseLoggerFactory(MyLoggerFactory)
-                //.UseSqlite("Data Source = shop.db");
-                .UseSqlServer(@"Data Source= .\SQLEXPRESS;Initial Catalog=ShopDb;Integrated Security=SSPI; ");
+                // .UseSqlite("Data Source = shop.db");
+                // .UseSqlServer(@"Data Source= .\SQLEXPRESS;Initial Catalog=ShopDb;Integrated Security=SSPI; ");
+                .UseMySql(connectionString,serverVersion);
         }
 
     }
@@ -35,12 +39,14 @@ namespace consoleApp
     public class Product
     {
         // Primary Key(Id, <type_name> Id)
-        [Key]
+        // [Key]
         public int Id { get; set; }
         [MaxLength(100)]
         [Required]
         public string Name { get; set; }  //string varsayılan olarak nullable
+        [Column(TypeName = "decimal(18,4)")]
         public decimal? Price { get; set; } //decimal varsayılan olarak nonnullable ancak ?--> nullable değer yapar.
+        public int CategoryId { get; set; }
 
     }
     public class Category
@@ -56,7 +62,7 @@ namespace consoleApp
         {
 
             // AddProduct();
-            AddProducts();
+            // AddProducts();
             // GetAllProducts();
             // GetAllProductById(1);
             // GetAllProductByName("samsung");
