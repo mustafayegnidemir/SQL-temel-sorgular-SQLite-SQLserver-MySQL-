@@ -29,6 +29,11 @@ Migration güncellemeleri esnasında eski migration lara dönme işlemi için d�
  
 Migarations klasöründen Son Migration işlemini silmek için
  'dotnet ef migrations remove'
+Not: Migration klasöründen silme işlemini yapmadan önce database den de silme işlemini yapmak gerekiyor
+Tüm migrationlar için başa dönmek için 
+ 'dotnet ef database update 0'
+Database i server üzerinden tamamen silmek için 
+ 'dotnet ef database drop'
 
  
 Tüm program.cs de kullanılacak metotlar eklenir.
