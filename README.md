@@ -17,11 +17,15 @@ Uygulamaya ait context class ı oluşturulur.
 Migration klasörünün oluşturulması gerekiyor.
 'dotnet ef migrations add InitialCreate'
 'dotnet ef database update'
-Not: Migration klasör oluşturduktan sonra gelecek updateler için örneğin coloumn ekleme 
+
+Migration klasör oluşturduktan sonra gelecek updateler için örneğin coloumn ekleme 
 -tablolara coloumn eklendikten sonra migration da update gereklidir. database tarafında değişiklikleri görmek içinde extra update gerekiyor.
 Orneğin  
   'dotnet ef migrations add addColoumnProductCaategoryId' 
   'dotnet ef database update'
+  
+Migration güncellemeleri esnasında eski migration lara dönme işlemi için dönmek istenilen migration-name ile yapılıyor.
+ 'dotnet ef database update addColoumnProductCategoryId'
 
  
 Tüm program.cs de kullanılacak metotlar eklenir.
