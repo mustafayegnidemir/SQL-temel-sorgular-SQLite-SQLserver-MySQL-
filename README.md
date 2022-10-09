@@ -26,6 +26,9 @@ Orneğin
   
 Migration güncellemeleri esnasında eski migration lara dönme işlemi için dönmek istenilen migration-name ile yapılıyor.
  'dotnet ef database update addColoumnProductCategoryId'
+ 
+Migarations klasöründen Son Migration işlemini silmek için
+ 'dotnet ef migrations remove'
 
  
 Tüm program.cs de kullanılacak metotlar eklenir.
