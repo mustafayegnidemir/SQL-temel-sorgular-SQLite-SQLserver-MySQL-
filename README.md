@@ -14,6 +14,7 @@ Console da SQL sorgularını dönüştürülmüş halini görmek için
 önce istenilen tablolara dair class lar oluşturulur.
 Uygulamaya ait context class ı oluşturulur.
 
+-Migrations işlemleri-
 Migration klasörünün oluşturulması gerekiyor.
 'dotnet ef migrations add InitialCreate'
 'dotnet ef database update'
@@ -30,9 +31,9 @@ Migration güncellemeleri esnasında eski migration lara dönme işlemi için d�
 Migarations klasöründen Son Migration işlemini silmek için
  'dotnet ef migrations remove'
 Not: Migration klasöründen silme işlemini yapmadan önce database den de silme işlemini yapmak gerekiyor
-Tüm migrationlar için başa dönmek için 
+0 noktasına dönmek için Tüm migrationlar için başa dönmek ve tüm tabloları kaldırmak için 
  'dotnet ef database update 0'
-Database i server üzerinden tamamen silmek için 
+Database i server üzerinden tamamen silmek için (Ancak database ile açık bir connection olmaması gerekiyor)
  'dotnet ef database drop'
 
  
