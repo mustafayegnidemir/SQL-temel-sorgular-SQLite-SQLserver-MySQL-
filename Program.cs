@@ -35,12 +35,30 @@ namespace consoleApp
                 // .UseSqlServer(@"Data Source= .\SQLEXPRESS;Initial Catalog=ShopDb;Integrated Security=SSPI; ");
                 .UseMySql(connectionString,serverVersion);
         }
+        // ProductCategory tablosunda iki tane primary key oluşturuyoruz.
+        protected override void OnModelCreating( ModelBuilder modelBuilder){
+             modelBuilder.Entity<ProductCategory>()
+                            .HasKey(t => new {t.ProductId,t.CategoryId}); 
+            modelBuilder.Entity<ProductCategory>()
+                            .HasOne(pc => pc.Product)
+                            .WithMany(p => p.ProductCategories)
+                            .HasForeignKey(pc => pc.ProductId);
+            modelBuilder.Entity<ProductCategory>()
+                            .HasOne(pc => pc.Category)
+                            .WithMany(c => c.ProductCategories)
+                            .HasForeignKey(pc => pc.CategoryId);
+        }
 
     }
 
     // One to Many
     // One to One
     // Many to many
+
+    // Convention --> UserId yi karşılıklı olarak    public Customer Customer { get; set; }  public Supplier Supplier { get; set; }
+    // data annotations  -->[Key] tanımlaması [Maxlength(200)] gibi tanımlamalar
+    // fluent api (en baskın olan) en çok many to many de kullanılıyor
+
 
     public class User{
         // public User()
@@ -93,94 +111,62 @@ namespace consoleApp
         // Primary Key(Id, <type_name> Id)
         // [Key]
         public int Id { get; set; }
-        [MaxLength(100)]
-        [Required]
         public string Name { get; set; }  //string varsayılan olarak nullable
-        [Column(TypeName = "decimal(18,4)")]
         public decimal? Price { get; set; } //decimal varsayılan olarak nonnullable ancak ?--> nullable değer yapar.
-        public int CategoryId { get; set; }
-
+        public List<ProductCategory> ProductCategories { get; set; }
     }
     public class Category
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public List<ProductCategory> ProductCategories { get; set; }
     }
 
+    public class ProductCategory
+    {
+        public int ProductId { get; set; }
+        public  Product Product { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+    }
 
     class Program
     {
         static void Main(string[] args)
         {
-            // InsertUsers();
-            // InsertAddresses();
-
-            // using (var db = new ShopContext())
-            // {
-            //     var user = db.Users.FirstOrDefault(i=>i.Username=="myegnidemir");
-            //     if (user!=null)
-            //     {
-            //         user.Addresses = new List<Address>();
-
-            //         user.Addresses.AddRange
-            //         (
-            //             new List<Address>()
-            //             {
-            //                 new Address(){FullName="myegnidemir", Title="İş adresi 1", Body="İstanbul"},
-            //                 new Address(){FullName="myegnidemir", Title="İş adresi 2", Body="İstanbul"},
-            //                 new Address(){FullName="myegnidemir", Title="İş adresi 3", Body="İstanbul"},
-            //             }
-            //         );
-
-            //         db.SaveChanges();
-            //     }
-            // }
-
-            // using (var db = new ShopContext())
-            // {
-            //     var customer = new Customer (){
-            //         IdentityNumber="123132132",
-            //         FirstName="Sadık",
-            //         LastName="Turan",
-            //         UserId=1 
-            //     };
-            //     db.Customers.Add(customer);
-            //     db.SaveChanges();
-
-                
-            // }
-
-            // using (var db = new ShopContext())
-            // {
-            //     var customer = new Customer (){
-            //         IdentityNumber="123132134",
-            //         FirstName="Akif",
-            //         LastName="dere",
-            //         User=db.Users.FirstOrDefault(i => i.Id ==3) 
-            //     };
-            //     db.Customers.Add(customer);
-            //     db.SaveChanges();
-            // }
-
-
-            // Customer ı user olarak da eklemek
             using (var db = new ShopContext())
             {
-                var user = new User()
+                var products = new List<Product>()
                 {
-                    Username ="Deneme",
-                    Email="deneme@gmail.org",
-                    Customer = new Customer()
-                    {
-                        FirstName= "Deneme",
-                        LastName= "Deneme",
-                        IdentityNumber = "1321323132"
-                    } 
+                    new Product(){Name="Samsung S5",Price=2000},
+                    new Product(){Name="Samsung S6", Price=3000},              
+                    new Product(){Name="Samsung S7", Price=4000},
+                    new Product(){Name="Samsung S8", Price=5000},
+                    new Product(){Name="Samsung S9", Price=6000},
                 };
+                // db.Products.AddRange(products);
 
-                db.Users.Add(user);
+                var categories = new List<Category>()
+                {
+                    new Category(){Name="Elektronik"},
+                    new Category(){Name="Telefon"},
+                    new Category(){Name="Bilgisayar"},
+                    
+                };
+                // db.Categories.AddRange(categories);
+
+                int[] ids = new int[2]{1,2};
+
+                var p = db.Products.Find(1);
+
+                p.ProductCategories = ids.Select(cid=> new ProductCategory(){
+                    CategoryId = cid,
+                    ProductId= p.Id
+                }).ToList();
                 db.SaveChanges();
-            }    
+                
+            }
+            
         }
 
         static void InsertUsers()
