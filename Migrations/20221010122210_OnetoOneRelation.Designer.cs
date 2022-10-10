@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using consoleApp;
 
@@ -10,9 +11,10 @@ using consoleApp;
 namespace consoleApp.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20221010122210_OnetoOneRelation")]
+    partial class OnetoOneRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +83,7 @@ namespace consoleApp.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("consoleApp.Product", b =>
@@ -104,29 +106,6 @@ namespace consoleApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("consoleApp.Supplier", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("TaxNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Supplier");
                 });
 
             modelBuilder.Entity("consoleApp.User", b =>
@@ -166,24 +145,11 @@ namespace consoleApp.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("consoleApp.Supplier", b =>
-                {
-                    b.HasOne("consoleApp.User", "User")
-                        .WithOne("Supplier")
-                        .HasForeignKey("consoleApp.Supplier", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("consoleApp.User", b =>
                 {
                     b.Navigation("Addresses");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Supplier");
                 });
 #pragma warning restore 612, 618
         }

@@ -14,7 +14,8 @@ namespace consoleApp
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }      
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
         // Yaptığımız link sorgusunun SQL karşılığı için
@@ -49,8 +50,28 @@ namespace consoleApp
         public int Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-
+        public Customer Customer { get; set; }
+        public Supplier Supplier { get; set; }
         public List<Address> Addresses { get; set; }
+
+    }
+    public class Customer
+    {
+        public  int Id { get; set; }
+        public string IdentityNumber { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public User User { get; set; }  // Yabancı anahtar
+        public int UserId { get; set; }  // One to One ilişki için 1 user 1 customerla denkleşmesi gerekiyor.
+    }
+    public class Supplier
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string TaxNumber { get; set; }
+        
+        public User User { get; set; }  // Yabancı anahtar
+        public int UserId { get; set; }  // One to One ilişki için 1 user 1 customerla denkleşmesi gerekiyor.
 
     }
 
@@ -94,26 +115,72 @@ namespace consoleApp
             // InsertUsers();
             // InsertAddresses();
 
+            // using (var db = new ShopContext())
+            // {
+            //     var user = db.Users.FirstOrDefault(i=>i.Username=="myegnidemir");
+            //     if (user!=null)
+            //     {
+            //         user.Addresses = new List<Address>();
+
+            //         user.Addresses.AddRange
+            //         (
+            //             new List<Address>()
+            //             {
+            //                 new Address(){FullName="myegnidemir", Title="İş adresi 1", Body="İstanbul"},
+            //                 new Address(){FullName="myegnidemir", Title="İş adresi 2", Body="İstanbul"},
+            //                 new Address(){FullName="myegnidemir", Title="İş adresi 3", Body="İstanbul"},
+            //             }
+            //         );
+
+            //         db.SaveChanges();
+            //     }
+            // }
+
+            // using (var db = new ShopContext())
+            // {
+            //     var customer = new Customer (){
+            //         IdentityNumber="123132132",
+            //         FirstName="Sadık",
+            //         LastName="Turan",
+            //         UserId=1 
+            //     };
+            //     db.Customers.Add(customer);
+            //     db.SaveChanges();
+
+                
+            // }
+
+            // using (var db = new ShopContext())
+            // {
+            //     var customer = new Customer (){
+            //         IdentityNumber="123132134",
+            //         FirstName="Akif",
+            //         LastName="dere",
+            //         User=db.Users.FirstOrDefault(i => i.Id ==3) 
+            //     };
+            //     db.Customers.Add(customer);
+            //     db.SaveChanges();
+            // }
+
+
+            // Customer ı user olarak da eklemek
             using (var db = new ShopContext())
             {
-                var user = db.Users.FirstOrDefault(i=>i.Username=="myegnidemir");
-                if (user!=null)
+                var user = new User()
                 {
-                    user.Addresses = new List<Address>();
+                    Username ="Deneme",
+                    Email="deneme@gmail.org",
+                    Customer = new Customer()
+                    {
+                        FirstName= "Deneme",
+                        LastName= "Deneme",
+                        IdentityNumber = "1321323132"
+                    } 
+                };
 
-                    user.Addresses.AddRange
-                    (
-                        new List<Address>()
-                        {
-                            new Address(){FullName="myegnidemir", Title="İş adresi 1", Body="İstanbul"},
-                            new Address(){FullName="myegnidemir", Title="İş adresi 2", Body="İstanbul"},
-                            new Address(){FullName="myegnidemir", Title="İş adresi 3", Body="İstanbul"},
-                        }
-                    );
-                    
-                    db.SaveChanges();
-                }
-            }
+                db.Users.Add(user);
+                db.SaveChanges();
+            }    
         }
 
         static void InsertUsers()
