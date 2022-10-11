@@ -61,6 +61,48 @@ namespace consoleApp
 
     }
 
+    public static class DataSeeding
+    {
+        public static void Seed(DbContext context)
+        {
+            if(context.Database.GetPendingMigrations().Count()==0 )
+            {
+                //ShopContext
+                if (context is ShopContext)
+                {
+                    ShopContext _context = context as ShopContext;
+
+                    if (_context.Products.Count()==0)
+                    {
+                        // product ekle
+                        _context.Products.AddRange(Products);
+                    }
+
+                    if (_context.Categories.Count()==0)
+                    {
+                        //category ekle
+                        _context.Categories.AddRange(Categories);
+                    }
+
+                }
+                context.SaveChanges();
+                
+
+            }
+        }
+    
+        private static Product[] Products = {
+            new Product (){Name ="Samsung S6",Price=2000},
+            new Product (){Name ="Samsung S7",Price=3000},
+            new Product (){Name ="Samsung S8",Price=4000},
+            new Product (){Name ="Samsung S9",Price=5000},
+        };
+        private static Category[] Categories = {
+            new Category (){Name ="Telefon"},
+            new Category (){Name ="Elektronik"},
+            new Category (){Name ="Bilgisayar"},
+        };
+    }
     // One to Many
     // One to One
     // Many to many
@@ -172,12 +214,14 @@ namespace consoleApp
                 // };
                 // db.Products.Add(p);
 
-                var p = db.Products.FirstOrDefault(); 
-                p.Name = "Samsung S10";
-                db.SaveChanges();
+                // var p = db.Products.FirstOrDefault(); 
+                // p.Name = "Samsung S10";
+                // db.SaveChanges();
 
                 
             }
+            // daha çok hazırlanan Test verilerini yüklemek için kullanıyoruz. 
+            DataSeeding.Seed(new ShopContext());
             
         }
 
