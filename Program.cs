@@ -9,232 +9,136 @@ using Microsoft.Extensions.Logging;
 
 namespace consoleApp
 {
-    // Entity Class 
-    public class ShopContext : DbContext
-    {
-
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; }      
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Address> Addresses { get; set; }
-
-        // Yaptığımız link sorgusunun SQL karşılığı için
-        public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
-
-
-        // Big Migration
-
-        // Provider
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var connectionString = @"server=localhost;port=3306;database=ShopDb;user=root;password=mysql123;";
-            var serverVersion = ServerVersion.AutoDetect(connectionString);
-            optionsBuilder
-                .UseLoggerFactory(MyLoggerFactory)
-                // .UseSqlite("Data Source = shop.db");
-                // .UseSqlServer(@"Data Source= .\SQLEXPRESS;Initial Catalog=ShopDb;Integrated Security=SSPI; ");
-                .UseMySql(connectionString,serverVersion);
-        }
-        // ProductCategory tablosunda iki tane primary key oluşturuyoruz.
-        protected override void OnModelCreating( ModelBuilder modelBuilder){
-            // tablo ismini db tarafında değiştirme -->Taabloyu map etme 
-            modelBuilder.Entity<Product>()
-                        .ToTable("ürünler");
-            modelBuilder.Entity<User>()
-                        .HasIndex(u=>u.Username)
-                        .IsUnique();
-            modelBuilder.Entity<Customer>()
-                        .Property(p => p.IdentityNumber)
-                        .HasMaxLength(15)
-                        .IsRequired();
-            modelBuilder.Entity<ProductCategory>()
-                            .HasKey(t => new {t.ProductId,t.CategoryId}); 
-            modelBuilder.Entity<ProductCategory>()
-                            .HasOne(pc => pc.Product)
-                            .WithMany(p => p.ProductCategories)
-                            .HasForeignKey(pc => pc.ProductId);
-            modelBuilder.Entity<ProductCategory>()
-                            .HasOne(pc => pc.Category)
-                            .WithMany(c => c.ProductCategories)
-                            .HasForeignKey(pc => pc.CategoryId);
-        }
-
-    }
-
-    public static class DataSeeding
-    {
-        public static void Seed(DbContext context)
-        {
-            if(context.Database.GetPendingMigrations().Count()==0 )
-            {
-                //ShopContext
-                if (context is ShopContext)
-                {
-                    ShopContext _context = context as ShopContext;
-
-                    if (_context.Products.Count()==0)
-                    {
-                        // product ekle
-                        _context.Products.AddRange(Products);
-                    }
-
-                    if (_context.Categories.Count()==0)
-                    {
-                        //category ekle
-                        _context.Categories.AddRange(Categories);
-                    }
-
-                }
-                context.SaveChanges();
-                
-
-            }
-        }
-    
-        private static Product[] Products = {
-            new Product (){Name ="Samsung S6",Price=2000},
-            new Product (){Name ="Samsung S7",Price=3000},
-            new Product (){Name ="Samsung S8",Price=4000},
-            new Product (){Name ="Samsung S9",Price=5000},
-        };
-        private static Category[] Categories = {
-            new Category (){Name ="Telefon"},
-            new Category (){Name ="Elektronik"},
-            new Category (){Name ="Bilgisayar"},
-        };
-    }
-    // One to Many
-    // One to One
-    // Many to many
-
-    // 1-Convention --> UserId yi karşılıklı olarak    public Customer Customer { get; set; }  public Supplier Supplier { get; set; }
-    // 2-data annotations  -->[Key] tanımlaması [Maxlength(200)] gibi tanımlamalar
-    // 3-fluent api (en baskın olan) en çok many to many de kullanılıyor
-
-
-    public class User{
-        // public User()
-        // {
-        //     this.Addresses = new List<Address>();
-        // }
-        public int Id { get; set; }
-        [Required]
-        [MaxLength(15), MinLength(8)]
-        public string Username { get; set; }
-        [Column(TypeName ="varchar(20)")]
-        public string Email { get; set; }
-        public Customer Customer { get; set; }
-        public Supplier Supplier { get; set; }
-        public List<Address> Addresses { get; set; }
-
-    }
-    public class Customer
-    {
-        [Column("customer_id")]
-        public  int Id { get; set; }
-        [Required]
-        public string IdentityNumber { get; set; }
-        [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
-        
-        [NotMapped]
-        public string FullName { get; set; }
-        public User User { get; set; }  // Yabancı anahtar
-        public int UserId { get; set; }  // One to One ilişki için 1 user 1 customerla denkleşmesi gerekiyor.
-    }
-    public class Supplier
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string TaxNumber { get; set; }
-        
-        public User User { get; set; }  // Yabancı anahtar
-        public int UserId { get; set; }  // One to One ilişki için 1 user 1 customerla denkleşmesi gerekiyor.
-
-    }
-
-    public class Address
-    {
-        public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public User User { get; set; }  // navigation property
-        public int? UserId { get; set; } // int nullable değil varsayılan int => 0 Tablo boşken hata gönderektir. Bunun için ? kullanılıyor.
-        
-    }
-
-
-    //[Entitiy] Product (Id,Name,Price)  => [DB] Product(Id,Name,Price)
-    public class Product
-    {
-        // Primary Key(Id, <type_name> Id)
-        // [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Name { get; set; }  //string varsayılan olarak nullable
-        public decimal? Price { get; set; } //decimal varsayılan olarak nonnullable ancak ?--> nullable değer yapar.
-        
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime InsertedDate { get; set; } = DateTime.Now;
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
-        public List<ProductCategory> ProductCategories { get; set; }
-    }
-    public class Category
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<ProductCategory> ProductCategories { get; set; }
-    }
-
-    // [NotMapped] // Product category database de tablo olarak görülmeyecek
-    [Table("UrunKategorileri")] // database tarafında görülecek tablo adı
-    public class ProductCategory
-    {
-        public int ProductId { get; set; }
-        public  Product Product { get; set; }
-        public int CategoryId { get; set; }
-        public Category Category { get; set; }
-    }
 
     class Program
     {
         static void Main(string[] args)
         {
-            // using (var db = new ShopContext())
-            // {
-                // var p = new Product()
-                // {
-                //     Name = "Samsung S6",
-                //     Price = 2000
-                // };
-                // db.Products.Add(p);
-
-                // var p = db.Products.FirstOrDefault(); 
-                // p.Name = "Samsung S10";
-                // db.SaveChanges();
-
-                
-            // }
-            // daha çok hazırlanan Test verilerini yüklemek için kullanıyoruz. 
-            // DataSeeding.Seed(new ShopContext());
-
-
             using (var db = new NorthwindContext())
             {
-                var products = db.Products.ToList();
+            // Tüm müşteri kayıtlarını getiriniz. (ToList())
+                // var customers = db.Customers.ToList();
 
-                foreach (var item in products)
-                {
-                    Console.WriteLine(item.ProductName);
-                }
+                // foreach (var item in customers)
+                // {
+                //     Console.WriteLine(item.FirstName +" "+ item.LastName);
+                // }
+
+            // Tüm müşteri kayıtlarının sadece first_name ve last_name bilgilerini getiriniz. (select(c => new {} c.FirstName))  anonymous type
+                // var customers = db.Customers.Select(c => new {
+                //     c.FirstName,
+                //     c.LastName
+                // });
+
+                // foreach (var item in customers)
+                // {
+                //     Console.WriteLine(item.FirstName +" "+ item.LastName);
+                // }
+
+
+
+            // New York' da yaşayan müşterileri isim sırasına göre getiriniz. .Where(i => i.City =="New York")
+                // var customers = db.Customers
+                //                     .Where(i => i.City =="New York")
+                //                     .Select(s => new {s.FirstName,s.LastName})
+                //                     .ToList();
+
+                // foreach (var item in customers)
+                // {
+                //     Console.WriteLine(item.FirstName +" "+ item.LastName);
+                // }
+                // "Beverages" kategorisine ait ürünlerin isimlerini getiriniz.
+
+                // var productnames = db.Products
+                //                     .Where(i => i.Category =="Beverages")
+                //                     .Select(s => new {s.ProductName})
+                //                     .ToList();
+
+                // foreach (var item in productnames)
+                // {
+                //     Console.WriteLine(item.ProductName);
+                // }
+
+
+
+
+            // En son eklenen 5 ürün bilgisini alınız.(.Take(5) --> tablonun en üstünden 5 tane değeri getirir.)(OrderByDescending(i => i.Id))
+
+                // var products = db.Products
+                //                     .OrderByDescending(i => i.Id)
+                //                     .Select(s => new {s.ProductName})
+                //                     .Take(5);
+                // foreach (var item in products)
+                // {
+                //     Console.WriteLine(item.ProductName);
+                // }
+
+
+            // Fiyatı 10 ile 30 arasında olan ürünlerin isim, fiyat bilgilerini azalan şekilde getiriniz.
+                // var products = db.Products
+                //                     .Where(i => i.ListPrice>=10 && i.ListPrice<=30)
+                //                     .Select(s => new {s.ProductName, s.ListPrice})
+                //                     .OrderByDescending(i => i.ListPrice)
+                //                     .ToList();
+                // foreach (var item in products)
+                // {
+                //     Console.WriteLine(item.ProductName+" "+item.ListPrice);
+                // }
+
+
+
+            // "Beverages" kategorisindeki ürünlerin ortalama fiyatı nedir?
+                // var ortalama = db.Products
+                //                     .Where(i => i.Category == "Beverages")
+                //                     .Average(i => i.ListPrice);
+
+                // Console.WriteLine("Ortalama Liste Fiyatı : {0}", ortalama);
+
+
+
+
+            // "Beverages" kategorisinde kaç ürün vardır?
+                // var categoryCount = db.Products
+                //                          .Where(i => i.Category == "Beverages")
+                //                          .Count();
+                // Console.WriteLine("Beverages kategorisinde ki ürün sayısı {0} ", categoryCount);
+                // //2. Yöntem
+                // var adet = db.Products.Count(i => i.Category =="Beverages");
+                // Console.WriteLine("Beverages kategorisinde ki ürün sayısı {0} ", adet);
+
+            // "Beverages" veya "Condiments" kategorilerindeki ürünlerin toplam fiyatı nedir?
+                // var toplam = db.Products
+                //                     .Where(i => i.Category == "Beverages" || i.Category =="Condiments")
+                //                     .Sum(i => i.ListPrice);
+
+                // Console.WriteLine("Toplam Liste Fiyatı : {0}", toplam);
+
+            // 'Tea' kelimesini içeren ürünleri getiriniz.
+                // var urunlerTea = db.Products
+                //                     .Where(i => i.ProductName.ToLower().Contains("Tea".ToLower()) || i.Description.ToLower().Contains("Tea".ToLower()))
+                //                     .ToList();
+                // foreach (var item in urunlerTea)
+                // {
+                //     Console.WriteLine(item.ProductName);
+                // }
+
+
+            // En pahalı ürün ve en ucuz ürün hangisidir?
+                // var pahali = db.Products.Max(i => i.ListPrice);
+                // var ucuz = db.Products.Min(i => i.ListPrice);
+
+                // Console.WriteLine("En ucuz ürünün fiyatı {0} iken en pahalı ürün {1} dir.",ucuz,pahali);
+
+                // var productPahali = db.Products.Where(i => i.ListPrice ==pahali).FirstOrDefault();
+                // var productUcuz = db.Products.Where(i => i.ListPrice ==ucuz).FirstOrDefault();
+
+                // // var productPahali = db.Products.Where(i => i.ListPrice ==db.Products.Max(a => a.ListPrice)).FirstOrDefault();
+                // // var productUcuz = db.Products.Where(i => i.ListPrice ==db.Products.Max(b => b.ListPrice)).FirstOrDefault();
+
+                // Console.WriteLine($"En ucuz ürün adı {productUcuz.ProductName} iken en pahalı ürün ise {productPahali.ProductName} dir.");
+
             }
-            
+ 
         }
 
 
