@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using consoleApp.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -205,8 +206,8 @@ namespace consoleApp
     {
         static void Main(string[] args)
         {
-            using (var db = new ShopContext())
-            {
+            // using (var db = new ShopContext())
+            // {
                 // var p = new Product()
                 // {
                 //     Name = "Samsung S6",
@@ -219,9 +220,20 @@ namespace consoleApp
                 // db.SaveChanges();
 
                 
-            }
+            // }
             // daha çok hazırlanan Test verilerini yüklemek için kullanıyoruz. 
-            DataSeeding.Seed(new ShopContext());
+            // DataSeeding.Seed(new ShopContext());
+
+
+            using (var db = new NorthwindContext())
+            {
+                var products = db.Products.ToList();
+
+                foreach (var item in products)
+                {
+                    Console.WriteLine(item.ProductName);
+                }
+            }
             
         }
 
