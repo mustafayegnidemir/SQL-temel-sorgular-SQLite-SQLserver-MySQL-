@@ -47,47 +47,30 @@ namespace consoleApp
     {
         static void Main(string[] args)
         {
-            using (var db = new NorthwindContext())
+        //     using (var db = new NorthwindContext())
+        //     {
+        //         var city = "Miami";
+        //         var customers = db.Customers.FromSqlRaw("select * from customers where city={0}",city).ToList();
+
+        //         foreach (var item in customers)
+        //         {
+        //             Console.WriteLine(item.FirstName);
+        //         }
+        //     }
+        // }
+
+
+            using (var db = new CustomerNortwindContext())
             {
-                // Sipariş sayısı 0 dan büyük olan customer ların FirstName i getirme
-                var customers = db.Customers
-                                    .Where(i => i.Orders.Any())
-                                    //.Where(i => i.Orders.Count()>0)
-                                    .Select(i => new CustomerDemo 
-                                    { 
-                                        CustomerId = i.Id,
-                                        Name = i.FirstName,
-                                        OrderCount = i.Orders.Count(),
-                                        Orders = i.Orders.Select( a => new OrderDemo{
-                                            OrderId = a.Id,
-                                            Total = (decimal)a.OrderDetails.Sum(od => od.Quantity*od.UnitPrice),
-                                            Products = a.OrderDetails.Select(p => new ProductDemo
-                                            {
-                                                ProductId = (int)p.ProductId ,
-                                                Name = p.Product.ProductName
-                                            }).ToList() 
-                                        }).ToList()
-                                        
-                                    })
-                                    .OrderBy(i => i.CustomerId)
-                                    .ToList();
-                foreach (var customer in customers)
+                var customers = db.CustomerOrders
+                .FromSqlRaw("select c.id, c.first_name, count(*) as count from customers c inner join orders o on c.id=o.customer_id group by c.id").ToList();
+                
+                foreach (var item in customers)
                 {
-                    Console.WriteLine($"id: {customer.CustomerId} name: {customer.Name} count:{customer.OrderCount}");
-                    foreach (var order in customer.Orders)
-                    {
-                        Console.WriteLine($"Order id: {order.OrderId} total : {order.Total}");
-                        foreach (var product in order.Products)
-                        {
-                            Console.WriteLine($"Product Id : {product.ProductId} name: {product.Name}");
-                        }
-                    }
+                    Console.WriteLine("Order id: {0} first name: {1} order count: {2}",item.CustomerId,item.FirstName,item.OrderCount);
                 }
-
             }
- 
         }
-
 
     }
 }

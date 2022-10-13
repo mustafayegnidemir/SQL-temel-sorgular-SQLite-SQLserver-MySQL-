@@ -2768,11 +2768,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
+      "projectUniqueName": "c:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
       "projectName": "consoleApp",
-      "projectPath": "C:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
+      "projectPath": "c:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
       "packagesPath": "C:\\Users\\myegn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\obj\\",
+      "outputPath": "c:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\myegn\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2840,7 +2840,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

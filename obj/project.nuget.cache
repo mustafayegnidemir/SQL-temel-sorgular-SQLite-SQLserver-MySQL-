@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BkXOSJC+RwV+SHpKW0yu1j8Hcr7iDKU01WMk+P0RwceC8nyoTFDe+Eur2Gr54kNSpQU6zsDuBRNd7ID2tVXXCQ==",
+  "dgSpecHash": "drsoDACBVO0HZOsnI0rs9N0iEl5eUmv7sHYvgBcWLQX42gL/QOSo6DltF/TuW91LQ7H9i1Dih8XDzJTfae/viA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
+  "projectFilePath": "c:\\Users\\myegn\\OneDrive\\Masaüstü\\GitHub\\.netCore\\entityFramework\\consoleApp\\consoleApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\myegn\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\myegn\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
